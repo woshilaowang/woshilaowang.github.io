@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hive无法远程连接metastore的问题 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="##hive客户端在远程连接metastore所在数据库时报错  报错起因：本人所维护的一台AWS的服务器(即metastore所在服务器)被回收了(用作测试机，有被回收的可能，故价格低一些)。所以在重新配置好mysql的metastore、mysql中hive的用户权限后，本从用hive远程客户端连接metastore时报以下错误：  Exception: Unable to instantia">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive无法远程连接metastore的问题">
+<meta property="og:url" content="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="##hive客户端在远程连接metastore所在数据库时报错  报错起因：本人所维护的一台AWS的服务器(即metastore所在服务器)被回收了(用作测试机，有被回收的可能，故价格低一些)。所以在重新配置好mysql的metastore、mysql中hive的用户权限后，本从用hive远程客户端连接metastore时报以下错误：  Exception: Unable to instantia">
+<meta property="og:updated_time" content="2018-01-04T08:07:33.071Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive无法远程连接metastore的问题">
+<meta name="twitter:description" content="##hive客户端在远程连接metastore所在数据库时报错  报错起因：本人所维护的一台AWS的服务器(即metastore所在服务器)被回收了(用作测试机，有被回收的可能，故价格低一些)。所以在重新配置好mysql的metastore、mysql中hive的用户权限后，本从用hive远程客户端连接metastore时报以下错误：  Exception: Unable to instantia">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hive无法远程连接metastore的问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/04/Hive无法远程连接metastore的问题/" class="article-date">
+  <time datetime="2018-01-04T07:24:20.000Z" itemprop="datePublished">2018-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hive无法远程连接metastore的问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##hive客户端在远程连接metastore所在数据库时报错 </p>
+<p>报错起因：本人所维护的一台AWS的服务器(即metastore所在服务器)被回收了(用作测试机，有被回收的可能，故价格低一些)。所以在重新配置好mysql的metastore、mysql中hive的用户权限后，本从用hive远程客户端连接metastore时报以下错误：<br>  Exception: Unable to instantiate org.apache.hadoop.hive.ql.metadata.SessionHiveMetaStoreClient</p>
+<p>  分析：由错误初步判断是网络不通引起的，所以从网络连接这块的检查下手，首先在hive客户端机器master2(在我这里hive客户端为master2，hive的metastore所在机器为master1)中执行命令：telnet master1 3306，结果不同，不返回“Escape character is ‘^]’”。</p>
+<p>  故到metastore所在的master1机器上查看3306端口是否已开放，<br>  执行命令：netstat -ntpl |grep 3306<br>  返回结果是：tcp        0      0        127.0.0.1:3306          0.0.0.0:*               LISTEN<br>  3306端口是打开的，但是发现3306的端口绑定的ip地址是127.0.0.1的，也就是说在非本机的telnet 3306是没办法有返回消息的。<br>  故从mysql的IP的绑定google，发现只要在mysql的配置文件 (我的是在 /etc/mysql/)下修改配置文件.cnf后缀的配置文件中将bind-address = 127.0.0.1 的那一行注释掉就可以了。</p>
+<p>  注意：在mysql的配置文件夹下有好几个.cnf的配置文件，里面均有可能配置有bind-address，需要全部都注释掉！本人就是在这里疏忽大意，漏改了配置文件！导致花了几个小时。</p>
+<p>  总结：我在这次错误中断断续续踩了一个早上的坑。回过头来看，主要是有由于自己对系统的了解不够深入和对mysql配置的不熟悉导致的，写此文警醒自己夯实基础。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjc07less0000ap0nknfxwawr" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/02/根据hexo-github-搭建自己的博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">根据hexo &amp;&amp; github 搭建自己的博客</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/04/Hive无法远程连接metastore的问题/">Hive无法远程连接metastore的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/02/根据hexo-github-搭建自己的博客/">根据hexo &amp;&amp; github 搭建自己的博客</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/02/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
