@@ -61,6 +61,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-presto安装过程中遇到的一些问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/09/presto安装过程中遇到的一些问题/" class="article-date">
+  <time datetime="2018-01-09T10:22:06.000Z" itemprop="datePublished">2018-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/09/presto安装过程中遇到的一些问题/">Presto安装过程中遇到的一些问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Presto是一个开源的分布式查询引擎，适用于交互式分析查询。</p>
+<p>我司原来使用的HDFS交互查询工具是Hive，使用的计算引擎是MapReduce，但是由于MapReduce的计算过程相对我们的需求来说有些慢，所以我们决定换上号称在同等的其他条件下可以比Hive快10倍的Presto。</p>
+<p>在Presto的安装过程中，根据<a href="http://www.cnblogs.com/tgzhu/p/6038123.html" target="_blank" rel="noopener">安装链接</a> ，我们跟着步骤走，到启动presto的时候，报了无法连接hive的错误，经查找错误，发现是配置的问题，presto是通过thrift(通信协议)来连接Hive的，默认的端口为9083,所以需要把presto的/etc/catalog下的配置文件hive.properties中加上如下配置：<br>connector.name=hive-hadoop2<br>hive.metastore.uri=thrift://shymaster1:9083<br>hive.config.resources=～/hadoop-2.6.4/etc/hadoop/core-site.xml,～/hadoop-2.6.4/etc/hadoop/hdfs-site.xml</p>
+<p>同时，保证在Hive的配置hive-site.xml中开启了thrift服务，端口亦为9083。</p>
+<p>用命令：<br>./presto –server localhost:(presto通信端口) –catalog hive –schema default<br>（其中，presto命令脚本本质是一个启动presto的<a href="https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/0.100/presto-cli-0.100-executable.jar" target="_blank" rel="noopener">jar包</a> ）启动presto，运行命令，show tables;没有报错，即已安装完成。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjcbdcwm60000se0n173vpdm1" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Hive无法远程连接metastore的问题" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/01/04/Hive无法远程连接metastore的问题/" class="article-date">
@@ -93,7 +134,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjc07less0000ap0nknfxwawr" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjcbdcwmi0002se0n3sbnh3lk" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -139,7 +180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjc07leto0002ap0ntt62q38f" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjcbdcwmw0003se0n43ke1nnb" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -184,7 +225,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjc07let60001ap0ncoi90uw4" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjcbdcwmc0001se0n3au9d622" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -223,6 +264,10 @@
     <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/01/09/presto安装过程中遇到的一些问题/">Presto安装过程中遇到的一些问题</a>
+          </li>
         
           <li>
             <a href="/2018/01/04/Hive无法远程连接metastore的问题/">Hive无法远程连接metastore的问题</a>
