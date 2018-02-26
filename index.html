@@ -85,11 +85,28 @@
       
         <p>本文主要是记录一些本人在日常开发中遇到的一些小问题和相应的解决方法,希望有遇到类似问题的网友能得到快速的解决方案。</p>
 <p>1,在用ssh远程连接服务器的时候，如果有一段时间没有操作界面，会经常遇到终端界面卡住的情况，这是ctrl+d都无济于事，只能关闭窗口再重新连接，后来我在网上看到有网友键盘输入～.就中断了连接，解决了。瞬间变有种很优雅的感觉。按照网友在man ssh的时候，也查到了关于～.命令的解释，就是disconnect，断开连接的意思。<br><img src="imgs/20180126-170037.png" alt=""></p>
-
+<hr>
+<p>2,今天在远程登录自己的ETL服务器的时候，突然发现在自己的服务器的文件颜色高亮没有了，在网上查后知道，可以根据dircolors的功能来修改配置，在用户目录的.bashrc文件中加入以下内容：<br>$ vim ~/.bashrc</p>
+<h1 id="enable-color-support-of-ls-and-also-add-handy-aliases"><a href="#enable-color-support-of-ls-and-also-add-handy-aliases" class="headerlink" title="enable color support of ls and also add handy aliases"></a>enable color support of ls and also add handy aliases</h1><p>if [ -x /usr/bin/dircolors ]; then</p>
+<p>eval “<code>dircolors -b</code>“</p>
+<p>alias ls=’ls –color=auto’</p>
+<p>alias dir=’dir –color=auto’</p>
+<p>alias vdir=’vdir –color=auto’</p>
+<p>alias grep=’grep –color=auto’</p>
+<p>alias fgrep=’fgrep –color=auto’</p>
+<p>alias egrep=’egrep –color=auto’</p>
+<p>fi</p>
+<p>#—————- &lt; my_dircolors Alyan @2009.03 &gt; ——#</p>
+<p># .c .h .cc .cpp 文件 加粗显示</p>
+<p># README README.txt 加亮红色</p>
+<p># Makefile 加下划线</p>
+<p>export LS_COLORS=”$LS_COLORS:<em>README=01;31:</em>README.txt=01;31:*Makefile=</p>
+<p>04;38:<em>.h=01;26:</em>.c=01;29:<em>.c c=01;26:</em>.cpp=01;29:”</p>
+<h2 id="注：来源"><a href="#注：来源" class="headerlink" title="注：来源 "></a>注：<a href="http://www.linuxdiyf.com/linux/13729.html" target="_blank" rel="noopener">来源</a> </h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjcvp96ql00001l0nhgw02a6f" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cje3wp9oz0001ea0n4ifu1219" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -130,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjcvp96r000041l0n5i1o16ge" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cje3wp9pa0002ea0n2yx2a9d1" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -172,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjcvp96qx00021l0nquj0e74y" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cje3wp9pk0003ea0nd38utejj" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -218,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjcvp96qy00031l0n4lbo2t2v" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cje3wp9pu0004ea0ni9q3b1eo" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -263,7 +280,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjcvp96qs00011l0n8nhwda9x" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cje3wp9or0000ea0ny2h0tocg" class="article-share-link">Teilen</a>
       
       
     </footer>
