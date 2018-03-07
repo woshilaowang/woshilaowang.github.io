@@ -5,14 +5,18 @@
   
 
   
-  <title>Hexo</title>
+  <title>Cloudera Manager 5.14.0安装配置 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="CDH-5.14.0集群安装部署 调研：CDH官网wiki  ####测试： 所用设备：四台机器  manager    node1     node2     node3  系统：Ubuntu 16.04.3 LTS     2核8G一台作为Cloudera Manager，三台作为hadoop集群 ####环境准备：  配置ssh免密钥登录  $cd .ssh $ssh-keygen -t r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cloudera Manager 5.14.0安装配置">
+<meta property="og:url" content="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="CDH-5.14.0集群安装部署 调研：CDH官网wiki  ####测试： 所用设备：四台机器  manager    node1     node2     node3  系统：Ubuntu 16.04.3 LTS     2核8G一台作为Cloudera Manager，三台作为hadoop集群 ####环境准备：  配置ssh免密钥登录  $cd .ssh $ssh-keygen -t r">
+<meta property="og:updated_time" content="2018-03-07T12:49:05.382Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Cloudera Manager 5.14.0安装配置">
+<meta name="twitter:description" content="CDH-5.14.0集群安装部署 调研：CDH官网wiki  ####测试： 所用设备：四台机器  manager    node1     node2     node3  系统：Ubuntu 16.04.3 LTS     2核8G一台作为Cloudera Manager，三台作为hadoop集群 ####环境准备：  配置ssh免密钥登录  $cd .ssh $ssh-keygen -t r">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -59,9 +63,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Cloudera-Manager-5-14-0安装配置" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Cloudera-Manager-5-14-0安装配置" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/" class="article-date">
   <time datetime="2018-03-07T12:32:01.000Z" itemprop="datePublished">2018-03-07</time>
@@ -74,8 +76,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/">Cloudera Manager 5.14.0安装配置</a>
+    <h1 class="article-title" itemprop="name">
+      Cloudera Manager 5.14.0安装配置
     </h1>
   
 
@@ -183,240 +185,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-奇技淫巧" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/26/奇技淫巧/" class="article-date">
-  <time datetime="2018-01-26T08:49:15.000Z" itemprop="datePublished">2018-01-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/26/奇技淫巧/">奇技淫巧</a>
-    </h1>
+    <a href="/2018/01/26/奇技淫巧/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">奇技淫巧</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文主要是记录一些本人在日常开发中遇到的一些小问题和相应的解决方法,希望有遇到类似问题的网友能得到快速的解决方案。</p>
-<p>1,在用ssh远程连接服务器的时候，如果有一段时间没有操作界面，会经常遇到终端界面卡住的情况，这是ctrl+d都无济于事，只能关闭窗口再重新连接，后来我在网上看到有网友键盘输入～.就中断了连接，解决了。瞬间变有种很优雅的感觉。按照网友在man ssh的时候，也查到了关于～.命令的解释，就是disconnect，断开连接的意思。<br><img src="imgs/20180126-170037.png" alt=""></p>
-<hr>
-<p>2,今天在远程登录自己的ETL服务器的时候，突然发现在自己的服务器的文件颜色高亮没有了，在网上查后知道，可以根据dircolors的功能来修改配置，在用户目录的.bashrc文件中加入以下内容：<br>$ vim ~/.bashrc</p>
-<h1 id="enable-color-support-of-ls-and-also-add-handy-aliases"><a href="#enable-color-support-of-ls-and-also-add-handy-aliases" class="headerlink" title="enable color support of ls and also add handy aliases"></a>enable color support of ls and also add handy aliases</h1><p>if [ -x /usr/bin/dircolors ]; then</p>
-<p>eval “<code>dircolors -b</code>“</p>
-<p>alias ls=’ls –color=auto’</p>
-<p>alias dir=’dir –color=auto’</p>
-<p>alias vdir=’vdir –color=auto’</p>
-<p>alias grep=’grep –color=auto’</p>
-<p>alias fgrep=’fgrep –color=auto’</p>
-<p>alias egrep=’egrep –color=auto’</p>
-<p>fi</p>
-<p>#—————- &lt; my_dircolors Alyan @2009.03 &gt; ——#</p>
-<p># .c .h .cc .cpp 文件 加粗显示</p>
-<p># README README.txt 加亮红色</p>
-<p># Makefile 加下划线</p>
-<p>export LS_COLORS=”$LS_COLORS:<em>README=01;31:</em>README.txt=01;31:*Makefile=</p>
-<p>04;38:<em>.h=01;26:</em>.c=01;29:<em>.c c=01;26:</em>.cpp=01;29:”</p>
-<h2 id="注：来源"><a href="#注：来源" class="headerlink" title="注：来源 "></a>注：<a href="http://www.linuxdiyf.com/linux/13729.html" target="_blank" rel="noopener">来源</a> </h2>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjeh2yvax0003bn0npp50i15d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-presto安装过程中遇到的一些问题" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/09/presto安装过程中遇到的一些问题/" class="article-date">
-  <time datetime="2018-01-09T10:22:06.000Z" itemprop="datePublished">2018-01-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/09/presto安装过程中遇到的一些问题/">Presto安装过程中遇到的一些问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Presto是一个开源的分布式查询引擎，适用于交互式分析查询。</p>
-<p>我司原来使用的HDFS交互查询工具是Hive，使用的计算引擎是MapReduce，但是由于MapReduce的计算过程相对我们的需求来说有些慢，所以我们决定换上号称在同等的其他条件下可以比Hive快10倍的Presto。</p>
-<p>在Presto的安装过程中，根据<a href="http://www.cnblogs.com/tgzhu/p/6038123.html" target="_blank" rel="noopener">安装链接</a> ，我们跟着步骤走，到启动presto的时候，报了无法连接hive的错误，经查找错误，发现是配置的问题，presto是通过thrift(通信协议)来连接Hive的，默认的端口为9083,所以需要把presto的/etc/catalog下的配置文件hive.properties中加上如下配置：<br>connector.name=hive-hadoop2<br>hive.metastore.uri=thrift://shymaster1:9083<br>hive.config.resources=～/hadoop-2.6.4/etc/hadoop/core-site.xml,～/hadoop-2.6.4/etc/hadoop/hdfs-site.xml</p>
-<p>同时，保证在Hive的配置hive-site.xml中开启了thrift服务，端口亦为9083。</p>
-<p>用命令：<br>./presto –server localhost:(presto通信端口) –catalog hive –schema default<br>（其中，presto命令脚本本质是一个启动presto的<a href="https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/0.100/presto-cli-0.100-executable.jar" target="_blank" rel="noopener">jar包</a> ）启动presto，运行命令，show tables;没有报错，即已安装完成。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjeh2yvaz0004bn0n5ifrng8p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Hive无法远程连接metastore的问题" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/04/Hive无法远程连接metastore的问题/" class="article-date">
-  <time datetime="2018-01-04T07:24:20.000Z" itemprop="datePublished">2018-01-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/04/Hive无法远程连接metastore的问题/">Hive无法远程连接metastore的问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>##hive客户端在远程连接metastore所在数据库时报错 </p>
-<p>报错起因：本人所维护的一台AWS的服务器(即metastore所在服务器)被回收了(用作测试机，有被回收的可能，故价格低一些)。所以在重新配置好mysql的metastore、mysql中hive的用户权限后，本从用hive远程客户端连接metastore时报以下错误：<br>  Exception: Unable to instantiate org.apache.hadoop.hive.ql.metadata.SessionHiveMetaStoreClient</p>
-<p>  分析：由错误初步判断是网络不通引起的，所以从网络连接这块的检查下手，首先在hive客户端机器master2(在我这里hive客户端为master2，hive的metastore所在机器为master1)中执行命令：telnet master1 3306，结果不同，不返回“Escape character is ‘^]’”。</p>
-<p>  故到metastore所在的master1机器上查看3306端口是否已开放，<br>  执行命令：netstat -ntpl |grep 3306<br>  返回结果是：tcp        0      0        127.0.0.1:3306          0.0.0.0:*               LISTEN<br>  3306端口是打开的，但是发现3306的端口绑定的ip地址是127.0.0.1的，也就是说在非本机的telnet 3306是没办法有返回消息的。<br>  故从mysql的IP的绑定google，发现只要在mysql的配置文件 (我的是在 /etc/mysql/)下修改配置文件.cnf后缀的配置文件中将bind-address = 127.0.0.1 的那一行注释掉就可以了。</p>
-<p>  注意：在mysql的配置文件夹下有好几个.cnf的配置文件，里面均有可能配置有bind-address，需要全部都注释掉！本人就是在这里疏忽大意，漏改了配置文件！导致花了几个小时。</p>
-<p>  总结：我在这次错误中断断续续踩了一个早上的坑。回过头来看，主要是有由于自己对系统的了解不够深入和对mysql配置的不熟悉导致的，写此文警醒自己夯实基础。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjeh2yvaq0001bn0nchpokd3l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-根据hexo-github-搭建自己的博客" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/02/根据hexo-github-搭建自己的博客/" class="article-date">
-  <time datetime="2018-01-02T09:50:53.000Z" itemprop="datePublished">2018-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/02/根据hexo-github-搭建自己的博客/">根据hexo &amp;&amp; github 搭建自己的博客</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>##Github Pages<br>Github Pages 原本是用于托管在github上的项目的，由于它提供免费稳定的空间，所以可以用来搭建博客。</p>
-<p>每个github帐号只能有一个仓库来存放自己的个人主页，而且仓库的名字必须是username/username.github.io,这个特殊的命名约定，让别人可以通过<a href="http://username.github.io来访问个人主页。" target="_blank" rel="noopener">http://username.github.io来访问个人主页。</a></p>
-<p>需要注意的是，个人网页的网站内容必须是在master分支下的。</p>
-<p>##部署Hexo到Github Pages</p>
-<p>意思就是把Hexo本地生成的博客部署到github上，然后可以通过<a href="http://username.github.io来访问博客的内容" target="_blank" rel="noopener">http://username.github.io来访问博客的内容</a></p>
-<p>首先，需要在自己的本地建立一个与github相连接的项目，然后创建一个archive文件夹。<br>$ git clone git@github.com:username/username.github.io.git<br>/username.github.io$ mkdir archive</p>
-<p>然后下载安装Hexo(需要提前安装好node.js等插件)，并根据Hexo生成博客模板<br>/username.github.io$hexo archive</p>
-<p>在archive文件中的 _config.xml末尾添加：<br>deploy:<br>  type: git<br>  repo: git@github.com:username/username.github.io.git<br>  branch: master</p>
-<p> 然后执行：<br> /username.github.io$ hexo d<br> 完成部署。</p>
-<p> 最后，将自己的本地项目推送到github上，然后打开<a href="http://username.github.io即可。" target="_blank" rel="noopener">http://username.github.io即可。</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjeh2yvb30005bn0n0n592c45" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/02/hello-world/" class="article-date">
-  <time datetime="2018-01-02T09:27:08.106Z" itemprop="datePublished">2018-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjeh2yvak0000bn0nr6j5k2xd" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
