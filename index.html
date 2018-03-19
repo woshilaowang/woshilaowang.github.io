@@ -83,20 +83,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code>CDH-5.14.0集群安装部署
-</code></pre><p>调研：<br><a href="https://www.cloudera.com/documentation/enterprise/latest/topics/introduction.html" target="_blank" rel="noopener">CDH官网wiki</a> </p>
-<p>####测试：</p>
-<p>所用设备：<br>四台机器</p>
-<blockquote>
-<p>manager<br>    node1<br>     node2<br>     node3</p>
-</blockquote>
+        <p>调研：<br><a href="https://www.cloudera.com/documentation/enterprise/latest/topics/introduction.html" target="_blank" rel="noopener">CDH官网wiki</a> </p>
+<p>测试：</p>
+<p>所用设备：<br>四台机器:<br>manager<br>node1<br>node2<br>node3</p>
 <p>系统：Ubuntu 16.04.3 LTS     2核8G<br>一台作为Cloudera Manager，三台作为hadoop集群</p>
-<p>####环境准备：</p>
+<p>环境准备：</p>
 <ul>
 <li>配置ssh免密钥登录</li>
 </ul>
-<p>$cd .ssh</p>
-<p>$ssh-keygen -t rsa<br>然后连续回车，生成密钥，并将～/.ssh目录下的所有机器的id_rsa.pub的内容追加到authorized_keys文件中，在所有的机器中复制相同的～/.ssh/authorized_keys。</p>
+<p>$cd .ssh<br>$ssh-keygen -t rsa</p>
+<p>然后连续回车，生成密钥，并将～/.ssh目录下的所有机器的id_rsa.pub的内容追加到authorized_keys文件中，在所有的机器中复制相同的～/.ssh/authorized_keys。</p>
 <ul>
 <li>配置/etc/hosts:</li>
 </ul>
@@ -110,16 +106,12 @@
 <li><p>在每台机器上安装Oracle官网的JDK ：jdk1.8.0_152（需注册oracle账户），安装在路径/usr/share/java下，并在/etc/profile配置环境变量：</p>
 </li>
 </ul>
-<blockquote>
 <p>export JAVA_HOME=/usr/share/java/jdk1.8.0_152<br>export JRE_HOME=$JAVA_HOME/jre<br>export PATH=$PATH:$JAVA_HOME/bin<br>export CLASSPATH=$CLASSPATH:.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib:$JRE_HOME/lib</p>
-</blockquote>
 <ul>
 <li>安装mysql数据库：<br>$ sudo apt-get install mysql-server</li>
 </ul>
-<p>user:root  passwd:your_passwd<br>在/etc/mysql/conf.d下创建mysql_cloudera_manager.cnf文件，加入以下内容：</p>
-<blockquote>
-<p>[mysqld]<br>transaction-isolation=READ-COMMITTED<br># Disabling symbolic-links is recommended to prevent assorted security risks;<br># to do so, uncomment this line:<br># symbolic-links=0<br>#key_buffer              = 16M<br>key_buffer_size         = 32M<br>max_allowed_packet      = 16M<br>thread_stack            = 256K<br>thread_cache_size       = 64<br>query_cache_limit       = 8M<br>query_cache_size        = 64M<br>query_cache_type        = 1<br># Important: see Configuring the Databases and Setting max_connections<br>max_connections         = 550<br># log-bin should be on a disk with enough free space<br>log-bin=/x/home/mysql/logs/binary/mysql_binary_log<br># For MySQL version 5.1.8 or later. Comment out binlog_format for older versions.<br>binlog_format           = mixed<br>read_buffer_size = 2M<br>read_rnd_buffer_size = 16M<br>sort_buffer_size = 8M<br>join_buffer_size = 8M<br># InnoDB settings<br>innodb_file_per_table = 1<br>innodb_flush_log_at_trx_commit  = 2<br>innodb_log_buffer_size          = 64M<br>innodb_buffer_pool_size         = 4G<br>innodb_thread_concurrency       = 8<br>innodb_flush_method             = O_DIRECT<br>innodb_log_file_size = 512M<br>[mysqld_safe]<br>log-error=/var/log/mysqld.log<br>pid-file=/var/run/mysqld/mysqld.pid</p>
-</blockquote>
+<p>user:root<br>passwd:your_passwd<br>在/etc/mysql/conf.d下创建mysql_cloudera_manager.cnf文件，加入以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">transaction-isolation=READ-COMMITTED</span><br><span class="line">\# Disabling symbolic-links is recommended to prevent assorted security risks;https://woshilaowang.github.io/2018/03/07/Cloudera-Manager-5-14-0%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</span><br><span class="line">\# to do so, uncomment this line:</span><br><span class="line">\# symbolic-links=0 </span><br><span class="line">\#key_buffer              = 16M</span><br><span class="line">key_buffer_size         = 32M</span><br><span class="line">max_allowed_packet      = 16M</span><br><span class="line">thread_stack            = 256K</span><br><span class="line">thread_cache_size       = 64</span><br><span class="line">query_cache_limit       = 8M</span><br><span class="line">query_cache_size        = 64M</span><br><span class="line">query_cache_type        = 1</span><br><span class="line">\# Important: see Configuring the Databases and Setting max_connections</span><br><span class="line">max_connections         = 550 </span><br><span class="line">\# log-bin should be on a disk with enough free space</span><br><span class="line">log-bin=/x/home/mysql/logs/binary/mysql_binary_log </span><br><span class="line">\# For MySQL version 5.1.8 or later. Comment out binlog_format for older versions.</span><br><span class="line">binlog_format           = mixed </span><br><span class="line">read_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 16M</span><br><span class="line">sort_buffer_size = 8M</span><br><span class="line">join_buffer_size = 8M </span><br><span class="line">\# InnoDB settings</span><br><span class="line">innodb_file_per_table = 1</span><br><span class="line">innodb_flush_log_at_trx_commit  = 2</span><br><span class="line">innodb_log_buffer_size          = 64M</span><br><span class="line">innodb_buffer_pool_size         = 4G</span><br><span class="line">innodb_thread_concurrency       = 8</span><br><span class="line">innodb_flush_method             = O_DIRECT</span><br><span class="line">innodb_log_file_size = 512M </span><br><span class="line">[mysqld_safe]</span><br><span class="line">log-error=/var/log/mysqld.log</span><br><span class="line">pid-file=/var/run/mysqld/mysqld.pid</span><br></pre></td></tr></table></figure>
 <p>在所有机器上安装MySQL JDBC驱动：<br>$ sudo apt-get install libmysql-java</p>
 <p>需要创建的数据库列表：<br>amon smon ran hmon hive</p>
 <p>create database amon DEFAULT CHARACTER SET utf8;<br>grant all on amon.<em> TO ‘amon’@’%’ IDENTIFIED BY ‘your_passwd’;<br>create database smon DEFAULT CHARACTER SET utf8;<br>grant all on smon.</em> TO ‘smon’@’%’ IDENTIFIED BY ‘your_passwd’;<br>create database rman DEFAULT CHARACTER SET utf8;<br>grant all on rman.<em> TO ‘rman’@’%’ IDENTIFIED BY ‘your_passwd’;<br>create database hmon DEFAULT CHARACTER SET utf8;<br>grant all on hmon.</em> TO ‘hmon’@’%’ IDENTIFIED BY ‘your_passwd’;<br>create database hive DEFAULT CHARACTER SET utf8;<br>grant all on hive.* TO ‘hive’@’%’ IDENTIFIED BY ‘your_passwd’;</p>
@@ -141,43 +133,55 @@
 <p>mysql -u root -p<br>create database scm DEFAULT CHARACTER SET utf8;<br>grant all on scm.* TO ‘scm’@’%’ IDENTIFIED BY ‘scm_akulaku’;<br>flush privileges;</p>
 <p>配置启动Cloudera Manager Server</p>
 <p>sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm scm_akulaku</p>
-<p>配置启动Cloudera Manager Server</p>
+<ul>
+<li>配置启动Cloudera Manager Server</li>
+</ul>
 <p>sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm scm_passwd<br>sudo service cloudera-scm-server start</p>
 <p>报错：Error: JAVA_HOME is not set and could not be found.<br>解决：cloudera manager读取不到JAVA_HOME，找不到java环境变量，则在CM的配置文件/etc/default/cloudera-scm-server中加上（在cloudera agent中亦做同样的处理）：<br>export JAVA_HOME=/usr/share/java/jdk1.8.0_152</p>
-<p>创建Oozie服务数据库：</p>
-<p>mysql -uroot -p<br>create database oozie DEFAULT CHARACTER SET utf8;<br>grant all on oozie.<em> TO ‘oozie’@’localhost’ IDENTIFIED BY ‘your_passwd’;<br>grant all on oozie.</em> TO ‘oozie’@’%’ IDENTIFIED BY ‘your_passwd’;<br>flush privileges;</p>
-<p>创建Hue Server服务数据库：<br>create database hue DEFAULT CHARACTER SET utf8;<br>grant all on hue.* TO ‘hue’@’%’ IDENTIFIED BY ‘your_passwd’;<br>flush privileges;</p>
 <ul>
-<li>安装Cloudera Agent:<br>在agent机器上执行:<br>sudo apt-get install cloudera-manager-agent cloudera-manager-daemons</li>
+<li>创建Oozie服务数据库：</li>
 </ul>
+<p>mysql -uroot -p<br>create database oozie DEFAULT CHARACTER SET utf8;<br>grant all on oozie.<em> TO ‘oozie’@’localhost’ IDENTIFIED BY ‘your_passwd’;<br>grant all on oozie.</em> TO ‘oozie’@’%’ IDENTIFIED BY ‘your_passwd’;<br>flush privileges;</p>
+<ul>
+<li>创建Hue Server服务数据库：</li>
+</ul>
+<p>create database hue DEFAULT CHARACTER SET utf8;<br>grant all on hue.* TO ‘hue’@’%’ IDENTIFIED BY ‘your_passwd’;<br>flush privileges;</p>
+<ul>
+<li>安装Cloudera Agent:</li>
+</ul>
+<p>在agent机器上执行:<br>sudo apt-get install cloudera-manager-agent cloudera-manager-daemons</p>
 <p>在各个节点的/etc/default/cloudera-scm-agent配置java环境变量：<br>export JAVA_HOME=/usr/share/java/jdk1.8.0_152<br>export CMF_AGENT_JAVA_HOME=/usr/share/java/jdk1.8.0_152</p>
-<p>配置Cloudera Manager Agent<br>在所有节点上，修改配置文件sudo vi /etc/cloudera-scm-agent/config.ini，配置Cloudera Manager Server的主机和端口：</p>
-<blockquote>
-<p>server_host=manager<br>server_port=7182 #默认端口即可</p>
-</blockquote>
+<p>配置Cloudera Manager Agent<br>在所有节点上，修改配置文件sudo vi /etc/cloudera-scm-agent/config.ini，配置Cloudera Manager Server的主机和端口：<br>server_host=manager<br>server_port=7182 #默认端口即可</p>
 <p>#修改parcel安装包所在路径：<br>#修改配置文件sudo vi /etc/cloudera-scm-agent/config.ini加上<br>#parcel_dir=/home/ubuntu/data/parcels</p>
 <ul>
 <li>遇到问题：</li>
 </ul>
 <p>报错：数据库无法连接！<br>解决：将/etc/mysql/mysql.conf.d/mysqld.cnf中的<br>bind-address           = 127.0.0.1这一行注释掉，然后重启数据库！</p>
-<p>报错：Exception in thread “main” MetaException(message:Version information not found in metastore. )<br>hive啓動，需要先運行schematool進行數據庫初始化：<br>首先需要手动初始化hive的matastore数据库，在metastore数据库中建表：<br>1,在node1上（即安装hiveServer的节点,下面用node1节点表示）/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql找到该文件，并复制整个文件夹到metastore所在服务器（manager节点），然后登录mysql:<br>mysql -uroot -p</p>
-<blockquote>
-<p>use hive;<br>source ~/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql/hive-schema-1.1.0.mysql.sql<br> 中间有报错说找不到hive-txn-schema-0.13.0.mysql.sql和041-HIVE-16556.mysql.sql</p>
-</blockquote>
-<p>修改hive-schema-1.1.0.mysql.sql脚本，将这两个文件的路径改为：～/mysql/hive-txn-schema-0.13.0.mysql.sql 和～/mysql/041-HIVE-16556.mysql.sql(具体位置有你所在的服务器的文件位置决定)。<br>然后重新执行上命令：</p>
-<blockquote>
-<p>source ~/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql/hive-schema-1.1.0.mysql.sql</p>
-</blockquote>
+<p>报错：Exception in thread “main” MetaException(message:Version information not found in metastore. )<br>hive啓動，需要先運行schematool進行數據庫初始化：<br>首先需要手动初始化hive的matastore数据库，在metastore数据库中建表：<br>1,在node1上（即安装hiveServer的节点,下面用node1节点表示）/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql找到该文件，并复制整个文件夹到metastore所在服务器（manager节点），然后登录mysql:<br>mysql -uroot -p<br>use hive;<br>source ~/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql/hive-schema-1.1.0.mysql.sql<br> 中间有报错说找不到hive-txn-schema-0.13.0.mysql.sql和041-HIVE-16556.mysql.sql</p>
+<p>修改hive-schema-1.1.0.mysql.sql脚本，将这两个文件的路径改为：～/mysql/hive-txn-schema-0.13.0.mysql.sql 和～/mysql/041-HIVE-16556.mysql.sql(具体位置有你所在的服务器的文件位置决定)。<br>然后重新执行上命令：<br>source ~/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/scripts/metastore/upgrade/mysql/hive-schema-1.1.0.mysql.sql</p>
 <p>2,在node1节点上用sudo find / -name hive-site.xml找到hive-site.xml配置文件所在位置，在本节点中是在：/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/etc/hive/conf.dist下。<br>添加如下内容，注意，对应的metastore数据库IP，名称和密码及thrift端口需自己修改：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;jdbc:mysql://myhost/metastore&lt;/value&gt;</span><br><span class="line">  &lt;description&gt;the URL of the MySQL database&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;hive&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;mypassword&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;datanucleus.autoCreateSchema&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;datanucleus.fixedDatastore&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;datanucleus.autoStartMechanism&lt;/name&gt; </span><br><span class="line">  &lt;value&gt;SchemaTable&lt;/value&gt;</span><br><span class="line">&lt;/property&gt; </span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.uris&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;thrift://node1:9083&lt;/value&gt;</span><br><span class="line">  &lt;description&gt;IP address (or fully-qualified domain name) and port of the metastore host&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">&lt;name&gt;hive.metastore.schema.verification&lt;/name&gt;</span><br><span class="line">&lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></p>
 <p>3，在node1节点上找到schematool脚本，一般是在：<br>/opt/cloudera/parcels/CDH-5.14.0-1.cdh5.14.0.p0.24/lib/hive/bin<br>执行如下命令：<br>sudo ./schematool -dbType mysql -initSchema<br>最后在页面端启动hive正常启动，问题解决。</p>
 <p>注：hadoop的各项配置可以在页面端修改。</p>
 <p>注意：<br>Cloudera 建议将 /proc/sys/vm/swappiness 设置为最大值 10。当前设置为 60。使用 sysctl 命令在运行时更改该设置并编辑 /etc/sysctl.conf，以在重启后保存该设置。</p>
-<p>####注：<br>在集群中增加节点时：<br>(待续…)</p>
+<hr>
+<ul>
+<li>在集群中增加节点时：<br>配置新节点与原各节点（包括manager）的免密钥登录，配置新节点的jdk环境（于原节点一样），配置/etc/hosts文件ip映射。</li>
+</ul>
+<p>配置Cloudera Manager的源:</p>
+<p> $ wget <a href="https://archive.cloudera.com/cm5/ubuntu/xenial/amd64/cm/cloudera.list" target="_blank" rel="noopener">https://archive.cloudera.com/cm5/ubuntu/xenial/amd64/cm/cloudera.list</a></p>
+<p> 在manager节点新建文件sudo vi /etc/apt/sources.list.d/cloudera-manager.list，复制cloudera.list的内容:<br> $ sudo cp cloudera.list /etc/apt/sources.list.d/cloudera-manager.list</p>
+<p> 向apt添加cloudera源公钥：<br>curl -s <a href="http://archive.cloudera.com/cm5/ubuntu/trusty/amd64/cm/archive.key" target="_blank" rel="noopener">http://archive.cloudera.com/cm5/ubuntu/trusty/amd64/cm/archive.key</a> | sudo apt-key add -<br>更新源:<br>sudo apt-get update</p>
+<ul>
+<li>安装Cloudera Agent:<br>在agent机器上执行:<br>sudo apt-get install cloudera-manager-agent cloudera-manager-daemons</li>
+</ul>
+<p>在各个节点的/etc/default/cloudera-scm-agent配置java环境变量：<br>export JAVA_HOME=/usr/share/java/jdk1.8.0_152<br>export CMF_AGENT_JAVA_HOME=/usr/share/java/jdk1.8.0_152</p>
+<p>配置Cloudera Manager Agent<br>在所有节点上，修改配置文件sudo vi /etc/cloudera-scm-agent/config.ini，配置Cloudera Manager Server的主机和端口：<br>server_host=master<br>server_port=7182 #默认端口即可</p>
+<p>查看当前swap分区设置cat /proc/sys/vm/swappiness<br>临时修改值：sudo sysctl vm.swappiness=10<br>永久修改值：sudo vim /etc/sysctl.conf，在最后加一行vm.swappiness = 10</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjeh2yvav0002bn0nx3ml3d8e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjey2obeg0000ua0ng64iknl5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -232,7 +236,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjeh2yvax0003bn0npp50i15d" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjey2obex0004ua0nkl0o1zu4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -273,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjeh2yvaz0004bn0n5ifrng8p" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjey2obes0002ua0nt5y0vkfa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -315,7 +319,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjeh2yvaq0001bn0nchpokd3l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjey2obev0003ua0n1bz8o7o6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -361,7 +365,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjeh2yvb30005bn0n0n592c45" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjey2obf00005ua0ndmj69ls7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -406,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjeh2yvak0000bn0nr6j5k2xd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjey2obeo0001ua0nrbpjiyc1" class="article-share-link">Share</a>
       
       
     </footer>
