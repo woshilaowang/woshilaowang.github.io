@@ -50,7 +50,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,6 +60,62 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-在CDH测试集群升级spark2-X" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/23/在CDH测试集群升级spark2-X/" class="article-date">
+  <time datetime="2018-03-23T03:02:28.000Z" itemprop="datePublished">2018-03-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/23/在CDH测试集群升级spark2-X/">在CDH测试集群升级spark2.X</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在CDH5.14.0集群中，默认安装的spark是1.6版本，这里需要将其升级为spark2.x版本。经查阅官方文档，发现spark1.6和2.x是可以并行安装的，也就是说可以不用删除默认的1.6版本，可以直接安装2.x版本，它们各自用的端口也是不一样的。第一次实验的时候安装2.1.0.cloudera2版本，但是在cloudera manager的web页面显示 无法安装，觉得可能是跟CDH版本冲突的问题（虽然从官网上看来版本是符合的…）,后修改spark版本为：2.2.0.cloudera2，安装成功！运行测试例子：./bin/run-example SparkPi 10 &gt; ～/Sparkpilog.txt亦成功。下面介绍安装过程：</p>
+<p>spark1.6服务可以与spark2共存于同一个集群上。两个服务配置在同一个yarn集群上运行不会发生冲突。<br><a href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_installing.html" target="_blank" rel="noopener">官方升级文档</a> </p>
+<p>环境准备：</p>
+<p>1,与CDH版本对应<br>2,与Cloudera Mnanager 版本对应<br>3,scala版本应为2.11<br>4,需要安装有python环境<br>5,需要配置jdk8<br><a href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_requirements.html" target="_blank" rel="noopener">参考链接</a> </p>
+<p>集群CDH版本为5.14.0，故选择sprk版本为：2.2.0.cloudera2。</p>
+<p>以下对每台机器都做相同的操作：<br>下载csd包到/opt/cloudera/csd目录，并且修改文件的用户和组。注意如果本目录下有其他的jar包，把删掉或者移到其他目录：<br>cd /opt/cloudera/csd</p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.2.0.cloudera2.jar" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.2.0.cloudera2.jar</a></p>
+<p>sudo chgrp cloudera-scm SPARK2_ON_YARN-2.2.0.cloudera2.jar</p>
+<p>sudo chown cloudera-scm SPARK2_ON_YARN-2.2.0.cloudera2.jar</p>
+<p>下载parcel包到机器的/opt/cloudera/parcel-repo目录下。注意，如果有其他的安装包，不用删除 ，但是如果本目录下有其他的重名文件比如manifest.json文件，把它重命名备份掉。然后把那3个parcel包的文件放在这里。</p>
+<p>CDH集群升级spark需要两个安装文件：<br>一个叫做csd文件(在CDH集群的/opt/cloudera文件下可见)，另一个是spark2.x的parcel安装包</p>
+<p>cd /opt/cloudera/parcel-repo</p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel</a></p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1</a></p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/manifest.json" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/manifest.json</a></p>
+<p>sudo mv SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1 SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha</p>
+<p>sudo chgrp cloudera-scm ./*</p>
+<p>sudo chown cloudera-scm ./*</p>
+<p>在cloudera manager运行：</p>
+<p>$ sudo service cloudera-scm-server restart</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/03/23/在CDH测试集群升级spark2-X/" data-id="cjf3dfn710001630n2rkc2e0w" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Cloudera-Manager-5-14-0安装配置" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -181,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjey2obeg0000ua0ng64iknl5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjf3dfn770003630nwrhazhmt" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -236,7 +292,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjey2obex0004ua0nkl0o1zu4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjf3dfn7w0005630n0mhxzxkm" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -277,7 +333,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjey2obes0002ua0nt5y0vkfa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjf3dfn7h0004630no19gp10a" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -319,7 +375,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjey2obev0003ua0n1bz8o7o6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjf3dfn760002630nrx6cvyi0" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -365,7 +421,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjey2obf00005ua0ndmj69ls7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjf3dfn820006630n5yhu6kdc" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -410,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjey2obeo0001ua0nrbpjiyc1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjf3dfn6t0000630nyj4lhcn6" class="article-share-link">Teilen</a>
       
       
     </footer>
@@ -436,7 +492,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
     </div>
@@ -446,9 +502,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/03/23/在CDH测试集群升级spark2-X/">在CDH测试集群升级spark2.X</a>
+          </li>
         
           <li>
             <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/">Cloudera Manager 5.14.0安装配置</a>
@@ -464,10 +524,6 @@
         
           <li>
             <a href="/2018/01/04/Hive无法远程连接metastore的问题/">Hive无法远程连接metastore的问题</a>
-          </li>
-        
-          <li>
-            <a href="/2018/01/02/根据hexo-github-搭建自己的博客/">根据hexo &amp;&amp; github 搭建自己的博客</a>
           </li>
         
       </ul>

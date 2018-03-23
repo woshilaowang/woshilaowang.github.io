@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>在CDH测试集群升级spark2.X | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在CDH5.14.0集群中，默认安装的spark是1.6版本，这里需要将其升级为spark2.x版本。经查阅官方文档，发现spark1.6和2.x是可以并行安装的，也就是说可以不用删除默认的1.6版本，可以直接安装2.x版本，它们各自用的端口也是不一样的。第一次实验的时候安装2.1.0.cloudera2版本，但是在cloudera manager的web页面显示 无法安装，觉得可能是跟CDH版本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在CDH测试集群升级spark2.X">
+<meta property="og:url" content="http://yoursite.com/2018/03/23/在CDH测试集群升级spark2-X/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在CDH5.14.0集群中，默认安装的spark是1.6版本，这里需要将其升级为spark2.x版本。经查阅官方文档，发现spark1.6和2.x是可以并行安装的，也就是说可以不用删除默认的1.6版本，可以直接安装2.x版本，它们各自用的端口也是不一样的。第一次实验的时候安装2.1.0.cloudera2版本，但是在cloudera manager的web页面显示 无法安装，觉得可能是跟CDH版本">
+<meta property="og:updated_time" content="2018-03-23T03:13:13.273Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在CDH测试集群升级spark2.X">
+<meta name="twitter:description" content="在CDH5.14.0集群中，默认安装的spark是1.6版本，这里需要将其升级为spark2.x版本。经查阅官方文档，发现spark1.6和2.x是可以并行安装的，也就是说可以不用删除默认的1.6版本，可以直接安装2.x版本，它们各自用的端口也是不一样的。第一次实验的时候安装2.1.0.cloudera2版本，但是在cloudera manager的web页面显示 无法安装，觉得可能是跟CDH版本">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-在CDH测试集群升级spark2-X" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/23/在CDH测试集群升级spark2-X/" class="article-date">
+  <time datetime="2018-03-23T03:02:28.000Z" itemprop="datePublished">2018-03-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在CDH测试集群升级spark2.X
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在CDH5.14.0集群中，默认安装的spark是1.6版本，这里需要将其升级为spark2.x版本。经查阅官方文档，发现spark1.6和2.x是可以并行安装的，也就是说可以不用删除默认的1.6版本，可以直接安装2.x版本，它们各自用的端口也是不一样的。第一次实验的时候安装2.1.0.cloudera2版本，但是在cloudera manager的web页面显示 无法安装，觉得可能是跟CDH版本冲突的问题（虽然从官网上看来版本是符合的…）,后修改spark版本为：2.2.0.cloudera2，安装成功！运行测试例子：./bin/run-example SparkPi 10 &gt; ～/Sparkpilog.txt亦成功。下面介绍安装过程：</p>
+<p>spark1.6服务可以与spark2共存于同一个集群上。两个服务配置在同一个yarn集群上运行不会发生冲突。<br><a href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_installing.html" target="_blank" rel="noopener">官方升级文档</a> </p>
+<p>环境准备：</p>
+<p>1,与CDH版本对应<br>2,与Cloudera Mnanager 版本对应<br>3,scala版本应为2.11<br>4,需要安装有python环境<br>5,需要配置jdk8<br><a href="https://www.cloudera.com/documentation/spark2/latest/topics/spark2_requirements.html" target="_blank" rel="noopener">参考链接</a> </p>
+<p>集群CDH版本为5.14.0，故选择sprk版本为：2.2.0.cloudera2。</p>
+<p>以下对每台机器都做相同的操作：<br>下载csd包到/opt/cloudera/csd目录，并且修改文件的用户和组。注意如果本目录下有其他的jar包，把删掉或者移到其他目录：<br>cd /opt/cloudera/csd</p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.2.0.cloudera2.jar" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.2.0.cloudera2.jar</a></p>
+<p>sudo chgrp cloudera-scm SPARK2_ON_YARN-2.2.0.cloudera2.jar</p>
+<p>sudo chown cloudera-scm SPARK2_ON_YARN-2.2.0.cloudera2.jar</p>
+<p>下载parcel包到机器的/opt/cloudera/parcel-repo目录下。注意，如果有其他的安装包，不用删除 ，但是如果本目录下有其他的重名文件比如manifest.json文件，把它重命名备份掉。然后把那3个parcel包的文件放在这里。</p>
+<p>CDH集群升级spark需要两个安装文件：<br>一个叫做csd文件(在CDH集群的/opt/cloudera文件下可见)，另一个是spark2.x的parcel安装包</p>
+<p>cd /opt/cloudera/parcel-repo</p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel</a></p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1</a></p>
+<p>sudo wget <a href="http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/manifest.json" target="_blank" rel="noopener">http://archive.cloudera.com/spark2/parcels/2.2.0.cloudera2/manifest.json</a></p>
+<p>sudo mv SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha1 SPARK2-2.2.0.cloudera2-1.cdh5.12.0.p0.232957-trusty.parcel.sha</p>
+<p>sudo chgrp cloudera-scm ./*</p>
+<p>sudo chown cloudera-scm ./*</p>
+<p>在cloudera manager运行：</p>
+<p>$ sudo service cloudera-scm-server restart</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/03/23/在CDH测试集群升级spark2-X/" data-id="cjf3dfn710001630n2rkc2e0w" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Cloudera Manager 5.14.0安装配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/23/在CDH测试集群升级spark2-X/">在CDH测试集群升级spark2.X</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/">Cloudera Manager 5.14.0安装配置</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/26/奇技淫巧/">奇技淫巧</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/presto安装过程中遇到的一些问题/">Presto安装过程中遇到的一些问题</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/04/Hive无法远程连接metastore的问题/">Hive无法远程连接metastore的问题</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
