@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="本文主要是记录一些本人在日常开发中遇到的一些小问题和相应的解决方法,希望有遇到类似问题的网友能得到快速的解决方案。 1,在用ssh远程连接服务器的时候，如果有一段时间没有操作界面，会经常遇到终端界面卡住的情况，这是ctrl+d都无济于事，只能关闭窗口再重新连接，后来我在网上看到有网友键盘输入～.就中断了连接，解决了。瞬间变有种很优雅的感觉。按照网友在man ssh的时候，也查到了关于～.命令的解释">
 <meta property="og:image" content="http://yoursite.com/2018/01/26/奇技淫巧/imgs/20180126-170037.png">
-<meta property="og:updated_time" content="2018-02-26T07:32:54.032Z">
+<meta property="og:updated_time" content="2018-05-09T04:11:30.653Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="奇技淫巧">
 <meta name="twitter:description" content="本文主要是记录一些本人在日常开发中遇到的一些小问题和相应的解决方法,希望有遇到类似问题的网友能得到快速的解决方案。 1,在用ssh远程连接服务器的时候，如果有一段时间没有操作界面，会经常遇到终端界面卡住的情况，这是ctrl+d都无济于事，只能关闭窗口再重新连接，后来我在网上看到有网友键盘输入～.就中断了连接，解决了。瞬间变有种很优雅的感觉。按照网友在man ssh的时候，也查到了关于～.命令的解释">
@@ -54,9 +54,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -106,11 +106,14 @@
 <p># Makefile 加下划线</p>
 <p>export LS_COLORS=”$LS_COLORS:<em>README=01;31:</em>README.txt=01;31:*Makefile=</p>
 <p>04;38:<em>.h=01;26:</em>.c=01;29:<em>.c c=01;26:</em>.cpp=01;29:”</p>
-<h2 id="注：来源"><a href="#注：来源" class="headerlink" title="注：来源 "></a>注：<a href="http://www.linuxdiyf.com/linux/13729.html" target="_blank" rel="noopener">来源</a> </h2>
+<h2 id="注：来源"><a href="#注：来源" class="headerlink" title="注：来源 "></a>注：<a href="http://www.linuxdiyf.com/linux/13729.html" target="_blank" rel="noopener">来源</a> </h2><p>由于linux内核过多引起的根盘inode溢出的问题，下面介绍一下我排除问题的思路：<br>首先,需要了解的是，inode是专门用来记录linux上的文件元信息和文件索引的，刚开始收到zabbix的监控报警，在hadoop集群机器上执行df -h命令，发现根盘并没有满，但是执行df -i 命令，发现inode数量占用超过90%，起初以为是跟hadoop有关，但是hadoop集群数据盘占用的inode是很少的（每个数据块(block)128M的原因）。故排除跟hadoop的关系，后执行：<br>for i in `ls -1A | grep -v  \”\.\./\” | grep -v \”\./\”`; do echo  \”`find $i | sort -u | wc -l` $i\”; done | sort -rn | head -10<br>找到根目录下文件数量排在前10位的文件夹：<br>892618 proc<br>383545 usr<br>311594 home<br>42700 sys<br>15317 lib<br>10466 var<br>1970 etc<br>498 run<br>365 dev<br>346 boot</p>
+<p>proc为系统硬件文件目录，因为不够了解所以没敢动，后来进入/usr/libx86_64-linux-gnu目录执行：ls -lR|grep “^-“| wc -l 发现，在这个目录下的linux内核文件占用了很多文件inode，所以判断是因为文件内核过多的问题，故：<br>先执行uname  -a<br>查看本机多用的linux内核（生产集群，必须要小心看清楚，，）<br>然后对应/usr/libx86_64-linux-gnu目录，找出不用的linux内核，执行：<br>sudo apt-get remove $linux-core-version<br>讲多余的linux内核删除，执行df -i<br>inode占用为35%，问题解决</p>
+<hr>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjf3dfn7w0005630n0mhxzxkm" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjgyl8l3b0002go0n2mtlzmrg" class="article-share-link">共有</a>
       
       
     </footer>
@@ -120,7 +123,7 @@
 <nav id="article-nav">
   
     <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Neuer</strong>
+      <strong class="article-nav-caption">次の記事</strong>
       <div class="article-nav-title">
         
           Cloudera Manager 5.14.0安装配置
@@ -130,7 +133,7 @@
   
   
     <a href="/2018/01/09/presto安装过程中遇到的一些问题/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
+      <strong class="article-nav-caption">前の記事</strong>
       <div class="article-nav-title">Presto安装过程中遇到的一些问题</div>
     </a>
   
@@ -153,7 +156,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
+    <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
     </div>
@@ -163,7 +166,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
+    <h3 class="widget-title">最近の投稿</h3>
     <div class="widget">
       <ul>
         
