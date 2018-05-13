@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>hadoop中hue,oozie,sqoop的应用 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近用CDH集群来管理hadoop集群，一方面方便了对集群各项性能的监控和各项配置的部署，但是也一定程度丧失了很多灵活度，比如刚开始不够了解CDH的话，会不知道CDH是如何部署Hadoop（泛指，包括hbase,spark等）的环境变量是如何配置。刚开始用CDH的时候，会遇到一些用户permission deny的错误，不知道各用户之间会有什么关系，在用户权限的管理上是怎么样的（对CDH多租户模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop中hue,oozie,sqoop的应用">
+<meta property="og:url" content="http://yoursite.com/2018/05/13/hadoop中hue-oozie-sqoop的应用/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近用CDH集群来管理hadoop集群，一方面方便了对集群各项性能的监控和各项配置的部署，但是也一定程度丧失了很多灵活度，比如刚开始不够了解CDH的话，会不知道CDH是如何部署Hadoop（泛指，包括hbase,spark等）的环境变量是如何配置。刚开始用CDH的时候，会遇到一些用户permission deny的错误，不知道各用户之间会有什么关系，在用户权限的管理上是怎么样的（对CDH多租户模式">
+<meta property="og:updated_time" content="2018-05-13T07:36:51.906Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hadoop中hue,oozie,sqoop的应用">
+<meta name="twitter:description" content="最近用CDH集群来管理hadoop集群，一方面方便了对集群各项性能的监控和各项配置的部署，但是也一定程度丧失了很多灵活度，比如刚开始不够了解CDH的话，会不知道CDH是如何部署Hadoop（泛指，包括hbase,spark等）的环境变量是如何配置。刚开始用CDH的时候，会遇到一些用户permission deny的错误，不知道各用户之间会有什么关系，在用户权限的管理上是怎么样的（对CDH多租户模式">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hadoop中hue-oozie-sqoop的应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/13/hadoop中hue-oozie-sqoop的应用/" class="article-date">
+  <time datetime="2018-05-13T06:31:24.000Z" itemprop="datePublished">2018-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hadoop中hue,oozie,sqoop的应用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近用CDH集群来管理hadoop集群，一方面方便了对集群各项性能的监控和各项配置的部署，但是也一定程度丧失了很多灵活度，比如刚开始不够了解CDH的话，会不知道CDH是如何部署Hadoop（泛指，包括hbase,spark等）的环境变量是如何配置。刚开始用CDH的时候，会遇到一些用户permission deny的错误，不知道各用户之间会有什么关系，在用户权限的管理上是怎么样的（对CDH多租户模式而言），这些都需要自己去看官方wiki了解，CDH中还是提供了对很多各类问题的解答和API功能的，在了解之后自己就可以灵活运用这其中的各种功能，就像使用一把瑞士军刀一下，对本人所在的中小企业来说，大多数的问题都是可以解决和妥协的。一定程度的妥协有利于自己的眼光不局限于某一个小问题，但是也需要提前防患于未然，防止问题变得不可解决，说白了，这其实就是个度的问题，而这个度要怎么去把握，就需要自己多去经历一些问题，多角度地思考，从而才能把握。</p>
+<p>前面是大概说了一些废话，现在细化讲讲我在使用CDH集群的时候，都遇到了哪些坑，有些就是自己不熟悉导致的小问题，不过还是希望对读者能有帮助：<br><b>1,</b>环境变量的配置，除了自己需要指定java path之外，hadoop的其他配置是不用配置了的，但是我还是不知道在CDH集群中的Hadoop环境变量是如何配置的，我分别查看了/etc/profile 和～/.bashrc文件下的配置是没有hadoop环境变量的配置的，但是echo $HADOOP_HOME是已经配好的，我google了还是没有结果，这让我有些疑惑，如果哪位读者知道的话，麻烦你能告诉我一下～</p>
+<p><b>2,</b>在Hue界面的Oozie使用Sqoop的时候，也产生一些我对Oozie使用不熟导致的问题， 配置文件xml<br>Sqoop的SQL语句因为空格，语句被Oozie拆分成多个变量</p>
+<p><b>3,</b></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/13/hadoop中hue-oozie-sqoop的应用/" data-id="cjh4lrmin0000ll0njh58d2m8" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/13/为什么需要写博客和写作/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          为什么需要写博客和写作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/23/在CDH测试集群升级spark2-X/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">在CDH测试集群升级spark2.X</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/13/为什么需要写博客和写作/">为什么需要写博客和写作</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/13/hadoop中hue-oozie-sqoop的应用/">hadoop中hue,oozie,sqoop的应用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/23/在CDH测试集群升级spark2-X/">在CDH测试集群升级spark2.X</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/">Cloudera Manager 5.14.0安装配置</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/26/奇技淫巧/">奇技淫巧</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
