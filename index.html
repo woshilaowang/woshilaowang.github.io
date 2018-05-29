@@ -50,7 +50,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,6 +60,81 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-SparkSQL中saveAsTable()无法写入Hive表" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/28/SparkSQL中saveAsTable()无法写入Hive表/" class="article-date">
+  <time datetime="2018-05-28T13:52:40.000Z" itemprop="datePublished">2018-05-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/28/SparkSQL中saveAsTable()无法写入Hive表/">SparkSQL中saveAsTable()无法写入Hive表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天在使用spark给hive表追加数据的时候，发现spark无法识别hive表的存储格式，明明hive表的存储格式使用的是parquet，却报：The format of the existing table midatadb.r_user_app_info is <code>HiveFileFormat</code>. It doesn’t match the specified format <code>ParquetFileFormat</code>错误。<br>从错误中可以看出貌似是Spark的saveAsTable()没有识别出hive的存储格式，一直误以为hive的存储格式为HiveFileFormat,导致spark没有办法按parquet的格式存储。</p>
+<p>google后发现也有人在CDH的讨论社区提问<a href="http://community.cloudera.com/t5/Advanced-Analytics-Apache-Spark/Spark-2-Can-t-write-dataframe-to-parquet-table/m-p/61808#M3041" target="_blank" rel="noopener">这个问题</a> ，有CDH的员工给出了暂时的<a href="https://www.cloudera.com/documentation/enterprise/release-notes/topics/cdh_rn_spark_ki.html#ki_sparksql_dataframe_saveastable" target="_blank" rel="noopener">解决方案</a> ，意思是说，sparkSQL中DataFrame的saveAsTable 方法和hive中的表不兼容，所以只能通过创建一个临时表，然后将临时表的数据写入到原表中去。<br>代码：<br>df.registerTempTable(tempName)<br>hsc.sql(s”””<br>CREATE TABLE $tableName (<br>// field definitions   )<br>STORED AS $format “””)<br>hsc.sql(s”INSERT INTO TABLE $tableName SELECT * FROM $tempName”)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/28/SparkSQL中saveAsTable()无法写入Hive表/" data-id="cjhr3jpmp0001m10n81tj0l4y" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-毕业两年，对自己的回顾" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/15/毕业两年，对自己的回顾/" class="article-date">
+  <time datetime="2018-05-15T12:09:38.000Z" itemprop="datePublished">2018-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/15/毕业两年，对自己的回顾/">毕业两年，对自己的回顾</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>毕业快两年了，回顾自己这两年的成长，自己学得不够认真，也走了很多的弯路。要说有收获的话，也就是对大数据的认知从无知到了了解的程度，自己浪费了很多时间，也经历了很多事，写这篇文章，希望能写点自己实际有的收获和总结，不至于完全自己到底学到了点什么都不知道，像某一些人一样，混了很多年都还是那个随随便便的样子。当然，也要向未来看，首先是注意自己的身体，珍惜自己的家人，好的身体是一切的前提，美满的家庭是所有的终点。相信还有很多东西在等着我，待续。。。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/15/毕业两年，对自己的回顾/" data-id="cjhr3jpnd000am10n88b8a7x4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-为什么需要写博客和写作" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -92,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/05/13/为什么需要写博客和写作/" data-id="cjh4m3dnc0005ve0npbumuahc" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/05/13/为什么需要写博客和写作/" data-id="cjhr3jpn90008m10nwqwkudek" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/05/13/hadoop中hue-oozie-sqoop的应用/" data-id="cjh4m3dn50002ve0nufepa5cu" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/05/13/hadoop中hue-oozie-sqoop的应用/" data-id="cjhr3jpmw0003m10n5gtzbjxh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -188,7 +263,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/03/23/在CDH测试集群升级spark2-X/" data-id="cjh4m3dne0006ve0nwvo0apsj" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/03/23/在CDH测试集群升级spark2-X/" data-id="cjhr3jpmy0004m10na3x7rswy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +393,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjh4m3dmt0000ve0n8xcoty8u" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/03/07/Cloudera-Manager-5-14-0安装配置/" data-id="cjhr3jpn20005m10nsomu7uk9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -376,7 +451,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjh4m3dng0007ve0n7orcbvhq" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/26/奇技淫巧/" data-id="cjhr3jpn50007m10nhznmaiy4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,7 +492,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjh4m3dn90004ve0nr6xivycl" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/09/presto安装过程中遇到的一些问题/" data-id="cjhr3jpn40006m10n2qogvzpq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -459,7 +534,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjh4m3dn00001ve0nhokm7mkq" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/04/Hive无法远程连接metastore的问题/" data-id="cjhr3jpmi0000m10nmwvyp3je" class="article-share-link">Share</a>
       
       
     </footer>
@@ -505,52 +580,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjh4m3dnh0008ve0n8ntj4an0" class="article-share-link">Teilen</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/02/hello-world/" class="article-date">
-  <time datetime="2018-01-02T09:27:08.106Z" itemprop="datePublished">2018-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/01/02/hello-world/" data-id="cjh4m3dn70003ve0n000tcp2j" class="article-share-link">Teilen</a>
+      <a data-url="http://yoursite.com/2018/01/02/根据hexo-github-搭建自己的博客/" data-id="cjhr3jpnb0009m10noqkksyph" class="article-share-link">Share</a>
       
       
     </footer>
@@ -561,6 +591,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -576,7 +611,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
     </div>
@@ -586,9 +621,17 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/05/28/SparkSQL中saveAsTable()无法写入Hive表/">SparkSQL中saveAsTable()无法写入Hive表</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/15/毕业两年，对自己的回顾/">毕业两年，对自己的回顾</a>
+          </li>
         
           <li>
             <a href="/2018/05/13/为什么需要写博客和写作/">为什么需要写博客和写作</a>
@@ -600,14 +643,6 @@
         
           <li>
             <a href="/2018/03/23/在CDH测试集群升级spark2-X/">在CDH测试集群升级spark2.X</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/07/Cloudera-Manager-5-14-0安装配置/">Cloudera Manager 5.14.0安装配置</a>
-          </li>
-        
-          <li>
-            <a href="/2018/01/26/奇技淫巧/">奇技淫巧</a>
           </li>
         
       </ul>
