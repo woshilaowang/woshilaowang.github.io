@@ -342,9 +342,9 @@
 </ul>
 <p>在master节点上执行：<br>sudo apt-get install cloudera-manager-daemons cloudera-manager-server </p>
 <p>创建Cloudera Manager Server数据库scm</p>
-<p>mysql -u root -p<br>create database scm DEFAULT CHARACTER SET utf8;<br>grant all on scm.* TO ‘scm’@’%’ IDENTIFIED BY ‘scm_akulaku’;<br>flush privileges;</p>
+<p>mysql -u root -p<br>create database scm DEFAULT CHARACTER SET utf8;<br>grant all on scm.* TO ‘scm’@’%’ IDENTIFIED BY ‘scm’;<br>flush privileges;</p>
 <p>配置启动Cloudera Manager Server</p>
-<p>sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm scm_akulaku</p>
+<p>sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm scm</p>
 <ul>
 <li>配置启动Cloudera Manager Server</li>
 </ul>
